@@ -1,0 +1,34 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock%}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p> by {{ post.author }} on {{ post.created_at }} </p>
+
+{% if post.image %}
+<img src="{{post.image.url}}" class="img-fluid mb-3" alt="{{post.title}}">
+{% endif %}
+
+<p>{{ post.content }}</p>
+
+<h2>Comments</h2>
+<ul class="list-group">
+    {% for comment in comments %}
+    <li class="list-group-item">
+        <strong>{{ comment.author }}:</strong> {{ comment.content }}
+    </li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+<h3>Leave a comment</h3>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% else %}
+<p><a href="{% url 'login' %}">Login</a> to drop a comment</p>
+{% endif %}
+{% endblock %}
